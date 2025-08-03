@@ -32,9 +32,6 @@ def arithmetic_arranger(problems=[], show_answer=False):
         if len(left) > 4 or len(right) > 4:
             errors.append('Error: Numbers cannot be more than four digits.')
             continue
-
-        if errors:
-            return "\n".join(errors)
         else:
             width = max(len(left), len(right)) + 2
             top = left.rjust(width)
@@ -52,20 +49,18 @@ def arithmetic_arranger(problems=[], show_answer=False):
             bottom_line.append(bottom)
             dash_line.append(dash)
 
+    if errors:
+        return '\n'.join(errors)
+
+    joined_top = '    '.join(top_line)
+    joined_bottom = '    '.join(bottom_line)
+    joined_dash = '    '.join(dash_line)
+    joined_answer = '    '.join(answer_line)
+
+    output = [joined_top, joined_bottom, joined_dash]
+
     if show_answer:
-        joined_top = '    '.join(top_line)
-        joined_bottom = '    '.join(bottom_line)
-        joined_dash = '    '.join(dash_line)
-        joined_answer = '    '.join(answer_line)
-
-        joined_lines = [joined_top, joined_bottom, joined_dash, joined_answer]
-        final_result = '\n'.join(joined_lines)
-        return final_result
+        output.append(joined_answer)
+        return '\n'.join(output)
     else:
-        joined_top = '    '.join(top_line)
-        joined_bottom = '    '.join(bottom_line)
-        joined_dash = '    '.join(dash_line)
-
-        joined_lines = [joined_top, joined_bottom, joined_dash]
-        final_result = '\n'.join(joined_lines)
-        return final_result
+        return '\n'.join(output)
