@@ -1,46 +1,71 @@
-## Errors
-# limit of problem per call is 5, exceeding will return an error 'Error: Too many problems'
-# addition and subtraction only, other operators will return an error "Error: Operator must be '+' or '-'."
-# each operands must only contain digits, or it will return an error 'Error: Numbers must only contain digits.'
-# 4 digits max per problem, exceeding will return an error 'Error: Numbers cannot be more than four digits.'
-
-# same order, first number = top, 2nd number = bottom. 
-# there should be a single space between the operator and the longest of the 2 operands
-# the operator should be on the same side of the second operand
-# numbers should be right aligned
-# 4 spaces between each problem
-# the dashes should run along the entire problem from the last digit to the operator
-
 def arithmetic_arranger(problems=[], show_answer=False):
-    errors = set()
+    errors = []
+
+    top_line = []
+    bottom_line = []
+    dash_line = []
+    answer_line = []
 
     # Error Handling
     if len(problems) > 5:
-        errors.add('Error: Too many problems')
+        errors.append('Error: Too many problems.')
 
     for problem in problems:
         # Parse
         try:
-            left, op, right = problem.split()
+            left, operator, right = problem.split()
         except ValueError:
-            errors.add('Error: Must enter two operands.')
+            errors.append('Error: Invalid problem format.')
+            continue
+
         # Operator Check
-        for operator in ['+', '-', '*', '/']:
-            if operator in problem:
-                left, right = problem.split(operator)
-                op = operator
-            else:
-                errors.add("Error: Operator must be '+' or '-'.")
+        if operator not in ['+', '-']:
+            errors.append("Error: Operator must be '+' or '-'.")
+            continue
 
         # Digit Check
         if not left.isdigit() or not right.isdigit():
-            errors.add('Error: Numbers must only contain digits.')
+            errors.append('Error: Numbers must only contain digits.')
+            continue
 
         # Length Check
         if len(left) > 4 or len(right) > 4:
-            errors.add('Error: Numbers cannot be more than four digits')
-        
-    if errors:
-        print("\n".join(errors))
-    
-arithmetic_arranger(["23s * 52", "62 + 1", "1 + 1", "5212 / 52", "62 + 1", "12 + 1"])
+            errors.append('Error: Numbers cannot be more than four digits.')
+            continue
+
+        if errors:
+            return "\n".join(errors)
+        else:
+            width = max(len(left), len(right)) + 2
+            top = left.rjust(width)
+            bottom = operator + right.rjust(width - 1)
+            dash = '-' * width
+
+            if operator == '+':
+                answer = str(int(left) + int(right))
+            else:
+                answer = str(int(left) - int(right))
+
+            formatted_answer = answer.rjust(width)
+            answer_line.append(formatted_answer)
+            top_line.append(top)
+            bottom_line.append(bottom)
+            dash_line.append(dash)
+
+    if show_answer:
+        joined_top = '    '.join(top_line)
+        joined_bottom = '    '.join(bottom_line)
+        joined_dash = '    '.join(dash_line)
+        joined_answer = '    '.join(answer_line)
+
+        joined_lines = [joined_top, joined_bottom, joined_dash, joined_answer]
+        final_result = '\n'.join(joined_lines)
+        return final_result
+    else:
+        joined_top = '    '.join(top_line)
+        joined_bottom = '    '.join(bottom_line)
+        joined_dash = '    '.join(dash_line)
+
+        joined_lines = [joined_top, joined_bottom, joined_dash]
+        final_result = '\n'.join(joined_lines)
+        return final_result
