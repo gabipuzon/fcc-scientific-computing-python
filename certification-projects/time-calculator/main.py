@@ -1,17 +1,4 @@
-# start time is in 12 hour format ending in AM or PM
-# duration is in hours and minutes
-# day is optional, it's the starting day of the week (case insensitive)
-
-# output is should show (next day) after the time.
-# if the result is more than a day, it should show (n days later) 
-# where n is the num of days passed
-
-# if the function is given the optional starting day
-# then the output should display the day of the week as a result
-
-# no python libraries needed to be imported
-
-def add_time(start, duration, day):
+def add_time(start, duration, day=None):
     days_of_the_week = ['Monday', 'Tuesday', 'Wednesday', 
                         'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -62,12 +49,53 @@ def add_time(start, duration, day):
         return
     
     # validate day (if given)
-    if day is not None:
-        if day.lower() not in [d.lower() for d in days_of_the_week]:
+    if day:
+        day = day.strip().capitalize()
+        if day not in days_of_the_week:
             print(f'Invalid input: {day}')
-            return
-
     # calculate
-    days_passed = 0
+    if meridian == 'AM':
+        if time_hour == 12:
+            time_hour = 0
+    elif meridian == 'PM':
+        if time_hour != 12:
+            time_hour += 12
 
-add_time("12:20 AM", "3:40", "Thursday")
+    converted_start = time_hour * 60 + time_min
+    converted_dur = dur_hour * 60 + dur_min
+
+    total_min = converted_start + converted_dur
+
+    days_passed = total_min // 1440
+    final_min = total_min % 1440
+
+    new_hour = final_min // 60
+    display_min = final_min % 60
+
+    if new_hour == 0:
+        display_hour, meridian = 12, 'AM'
+    elif 1 <= new_hour < 12:
+        display_hour, meridian = new_hour, 'AM'
+    elif new_hour == 12:
+        display_hour, meridian = 12, 'PM'
+    else:
+        display_hour, meridian = new_hour - 12, 'PM'
+ 
+    # output format
+    display_hour = int(display_hour)
+    display_min = int(display_min)
+
+    if day:
+        start_index = days_of_the_week.index(day.capitalize())
+        display_day = days_of_the_week[(start_index + days_passed) % len(days_of_the_week)]
+
+    time_str = f'{display_hour}:{display_min:02d} {meridian}'
+    if day:
+        time_str += f', {display_day}'
+    if days_passed == 1:
+        time_str += f' (next day)'
+    elif days_passed > 1:
+        time_str += f' ({days_passed} days later)'
+    return time_str
+
+print(add_time('11:59 PM', '24:05'))
