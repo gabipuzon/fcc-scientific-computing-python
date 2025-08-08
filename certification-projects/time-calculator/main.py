@@ -5,8 +5,7 @@ def add_time(start, duration, day=None):
     # parse start
     time_colon_pos = start.find(':')
     if time_colon_pos == -1:
-        print(f'Invalid input: {start}')
-        return
+        raise ValueError(f'Invalid input: {start}')
         
     time_hour = int(start[:time_colon_pos])
     time_min = int(start[time_colon_pos + 1 : time_colon_pos + 3])
@@ -14,45 +13,34 @@ def add_time(start, duration, day=None):
     try:
         _, meridian = start.split()
     except ValueError:
-        print(f'Invalid input: {start}')
-        return
+        raise ValueError(f'Invalid input: {start}')
     meridian = meridian.upper()
 
     # validate start
     if not(1 <= time_hour <= 12):
-        print(f'Invalid input: {time_hour}')
-        return
+        raise ValueError(f'Invalid input: {time_hour}')
     
     if not(0 <= time_min <= 59):
-        print(f'Invalid input: {time_min}')
-        return
-    
+        raise ValueError(f'Invalid input: {time_min}')
+        
     if meridian not in ['AM', 'PM']:
-        print(f'Invalid input: {meridian}')
-        return
-    
+        raise ValueError(f'Invalid input: {meridian}')
+        
     # parse duration
     duration_colon_pos = duration.find(':')
     if duration_colon_pos == -1:
-        print(f'Invalid input: {duration}')
-        return
-    
+        raise ValueError(f'Invalid input: {duration}')
+        
     dur_hour = int(duration[:duration_colon_pos])
     dur_min = int(duration[duration_colon_pos + 1: duration_colon_pos + 3])
     
     # validate duration
     if dur_hour < 0:
-        print(f'Invalid input: {dur_hour}')
-        return
+        raise ValueError(f'Invalid input: {dur_hour}')
+
     if not (0 <= dur_min <= 59):
-        print(f'Invalid input: {dur_min}')
-        return
+        raise ValueError(f'Invalid input: {dur_min}')
     
-    # validate day (if given)
-    if day:
-        day = day.strip().capitalize()
-        if day not in days_of_the_week:
-            print(f'Invalid input: {day}')
     # calculate
     if meridian == 'AM':
         if time_hour == 12:
