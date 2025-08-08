@@ -97,5 +97,3 @@ def add_time(start, duration, day=None):
     elif days_passed > 1:
         time_str += f' ({days_passed} days later)'
     return time_str
-
-print(add_time('11:59 PM', '24:05'))
